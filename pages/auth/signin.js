@@ -3,13 +3,20 @@ import Link from "next/link";
 import { TextField, Button } from "@mui/material";
 
 const signin = () => {
+  function handleSignin(e) {
+    e.preventDefault();
+  }
+
   return (
     <>
       <Head>
         <title>Signup</title>
       </Head>
       <div className="h-screen border grid place-content-center w-screen">
-        <form className="flex flex-col gap-4 w-[70vw] sm:w-[50vw] md:w-[30vw]">
+        <form
+          onSubmit={handleSignin}
+          className="flex flex-col gap-4 w-[70vw] sm:w-[50vw] md:w-[30vw]"
+        >
           <TextField id="email" variant="outlined" label="Email" type="email" />
 
           <TextField
@@ -26,7 +33,11 @@ const signin = () => {
             type="password"
           />
 
-          <Button variant="contained" className="text-white bg-blue-600 capitalize">
+          <Button
+            type="submit"
+            variant="contained"
+            className="text-white bg-blue-600 capitalize"
+          >
             Sign In
           </Button>
         </form>

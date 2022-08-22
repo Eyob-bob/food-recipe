@@ -1,17 +1,21 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import jwt from "jsonwebtoken";
 import instance from "../../../lib/axiosConfig";
+import { useDispatch } from "react-redux";
+import { login } from "../../../redux-slices/userSlice";
 
 const verify = ({ accessToken, refreshToken }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const accToken = jwt.decode(accessToken, process.env.ACCESS_TOKEN_SECRET);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
     if (accToken.verified) {
+      dispatch(login());
       router.push("/");
     }
   });
@@ -25,7 +29,6 @@ export async function getServerSideProps(context) {
   const token = await instance.post("auth/user", {
     email: context.params.email,
   });
-  console.log();
   return {
     props: {
       accessToken: token.data._doc.access_token,

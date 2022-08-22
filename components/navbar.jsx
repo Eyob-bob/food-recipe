@@ -7,11 +7,15 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import useUser from "../custom-hooks/useUser";
+import { Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux-slices/userSlice";
 
 const Navbar = ({ isOpen, setIsOpen }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const user = useSelector((state) => state.user.user);
+  const user = useUser();
+  const dispatch = useDispatch();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -96,11 +100,26 @@ const Navbar = ({ isOpen, setIsOpen }) => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
+        {user.accessToken ? (
+          <MenuItem>
+            <Button
+              variant="text"
+              onClick={() => {
+                dispatch(logout());
+              }}
+            >
+              Logout
+            </Button>
+          </MenuItem>
+        ) : (
           <Link href="/auth/signin">
-            <a> {"Login"} </a>
+            <a>
+              <MenuItem>
+                <Button variant="text">Login </Button>
+              </MenuItem>
+            </a>
           </Link>
-        </MenuItem>
+        )}
       </Menu>
     </div>
   );

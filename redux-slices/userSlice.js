@@ -1,15 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: null,
+  user: {
+    accessToken:
+      typeof window !== "undefined" && localStorage.getItem("accessToken"),
+
+    refreshToken:
+      typeof window !== "undefined" && localStorage.getItem("refreshToken"),
+    verified: false,
+  },
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login: (state) => {},
-    logout: (state) => {},
+    login: (state) => {
+      state.user = {
+        accessToken:
+          typeof window !== "undefined" && localStorage.getItem("accessToken"),
+
+        refreshToken:
+          typeof window !== "undefined" && localStorage.getItem("refreshToken"),
+      };
+    },
+    logout: (state) => {
+      state.user = {
+        accessToken:
+          typeof window !== "undefined" &&
+          localStorage.removeItem("accessToken"),
+
+        refreshToken:
+          typeof window !== "undefined" &&
+          localStorage.removeItem("refreshToken"),
+      };
+    },
   },
 });
 
