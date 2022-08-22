@@ -43,13 +43,19 @@ const signup = () => {
       setOpen(true);
       setMessage("Password doesn't match with confirm password");
     } else {
-      const data = await instance.post("auth/signup", {
-        name: state.name,
-        email: state.email,
-        password: state.password,
-      });
-      if (data.status == 200) {
-        router.push(`verify/${state.email}`);
+      let data;
+      try {
+        data = await instance.post("auth/signup", {
+          name: state.name,
+          email: state.email,
+          password: state.password,
+        });
+        if (data.status == 200) {
+          router.push(`verify/${state.email}`);
+        }
+      } catch (err) {
+        setOpen(true);
+        setMessage(err.response.data);
       }
     }
   }

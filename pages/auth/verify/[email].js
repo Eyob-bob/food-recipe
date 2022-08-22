@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import instance from "../../../lib/axiosConfig";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-slices/userSlice";
+import { Button } from "@mui/material";
 
 const verify = ({ accessToken, refreshToken }) => {
   const router = useRouter();
@@ -18,10 +19,24 @@ const verify = ({ accessToken, refreshToken }) => {
       dispatch(login());
       router.push("/");
     }
-  });
+  }, []);
 
   return (
-    <div>An Email sent to your account please verify and refresh this page</div>
+    <>
+      <div>
+        An Email sent to your account please verify and refresh this page
+      </div>
+      Didn't get the code?
+      <Button
+        variant="outlined"
+        onClick={async () => {
+          console.log(router.query.email);
+          await instance.post("/auth/resend", { email: router.query.email });
+        }}
+      >
+        Resend
+      </Button>
+    </>
   );
 };
 
