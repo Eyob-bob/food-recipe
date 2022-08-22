@@ -8,6 +8,7 @@ import Alert from "@mui/material/Alert";
 import { useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import instance from "../../lib/axiosConfig.js";
+import useUser from "../../custom-hooks/useUser.js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -36,6 +37,7 @@ const signup = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
+  useUser();
 
   async function handleSignup(e) {
     e.preventDefault();
