@@ -11,6 +11,7 @@ import useUser from "../custom-hooks/useUser";
 import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux-slices/userSlice";
+import jwt from "jsonwebtoken";
 
 const Navbar = ({ isOpen, setIsOpen }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -24,6 +25,15 @@ const Navbar = ({ isOpen, setIsOpen }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function getUserName() {
+    const accessData = jwt.decode(
+      user.accessToken,
+      process.env.ACCESS_TOKEN_SECRET
+    );
+
+    return accessData.name;
+  }
 
   return (
     <div className="flex justify-between items-center h-14 border w-screen md:w-[calc(100%-15rem)] lg:w-[calc(100%-20rem)] px-12 md:px-8 shadow-sm">
@@ -61,7 +71,9 @@ const Navbar = ({ isOpen, setIsOpen }) => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>
+              {user.accessToken && getUserName()[0].toUpperCase()}
+            </Avatar>
           </IconButton>
         </Tooltip>
       </Box>

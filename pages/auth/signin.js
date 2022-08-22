@@ -41,7 +41,6 @@ const signin = () => {
       localStorage.setItem("refreshToken", data.refreshToken);
 
       dispatch(login());
-      console.log(data);
     } catch (err) {
       setOpen(true);
       setMessage(err.response.data);
