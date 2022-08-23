@@ -12,11 +12,18 @@ import { Button } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux-slices/userSlice";
 import jwt from "jsonwebtoken";
+import { useRouter } from "next/router";
+import CloseIcon from "@mui/icons-material/Close";
+import useIsOpen from "../custom-hooks/useIsOpen";
+import { closed, opened } from "../redux-slices/isOpenSlice";
 
-const Navbar = ({ isOpen, setIsOpen }) => {
+const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const user = useUser();
+  const isOpen = useIsOpen();
   const dispatch = useDispatch();
+  const [userName, setUserName] = React.useState("");
+  const router = useRouter();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -26,22 +33,21 @@ const Navbar = ({ isOpen, setIsOpen }) => {
     setAnchorEl(null);
   };
 
-  function getUserName() {
+  React.useEffect(() => {
     const accessData = jwt.decode(
       user.accessToken,
       process.env.ACCESS_TOKEN_SECRET
     );
-
-    return accessData.name;
-  }
+    if (accessData) setUserName(accessData.name);
+  }, []);
 
   return (
-    <div className="flex justify-between items-center h-14 border w-screen md:w-[calc(100%-15rem)] lg:w-[calc(100%-20rem)] px-12 md:px-8 shadow-sm">
+    <div className="flex justify-between items-center h-14 border w-screen p-4 shadow-sm z-50 fixed bg-white">
       <div className="flex gap-4 h-[100%] items-center ">
         <IconButton
           className="text-black"
           onClick={() => {
-            setIsOpen(!isOpen);
+            dispatch(opened());
           }}
         >
           <ListIcon className="md:hidden w-8 h-8" />
@@ -55,11 +61,48 @@ const Navbar = ({ isOpen, setIsOpen }) => {
         </h1>
       </div>
 
-      <input
-        type="text"
-        className="border rounded-md h-10 p-4 outline-orange-600 hidden sm:block"
-        placeholder="Search..."
-      />
+      <div
+        className={`md:static md:w-auto md:bg-transparent md:h-auto fixed left-0 top-0 bg-orange-700 text-white h-screen w-[50%] transition-all md:border md:p-2 md:rounded-xl md:shadow-inner md:text-black  ${
+          !isOpen && "w-0 overflow-hidden "
+        }`}
+      >
+        <IconButton
+          className=" absolute right-3 top-3 text-white "
+          onClick={() => {
+            dispatch(closed());
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+
+        <ul className="md:flex-row md flex flex-col gap-4 justify-center items-center h-full">
+          <li className={router.pathname == "/" ? "active" : ""}>
+            <Link href="/">
+              <a>Home</a>
+            </Link>
+          </li>
+          <li className={router.pathname == "/favorite" ? "active" : ""}>
+            <Link href="/favorite">
+              <a>Favorite</a>
+            </Link>
+          </li>
+          <li className={router.pathname == "/bookmark" ? "active" : ""}>
+            <Link href="/bookmark">
+              <a>Bookmark</a>
+            </Link>
+          </li>
+          <li className={router.pathname == "/myrecipes" ? "active" : ""}>
+            <Link href="/myrecipes">
+              <a>My Recipes</a>
+            </Link>
+          </li>
+          <li className={router.pathname == "/createrecipes" ? "active" : ""}>
+            <Link href="/createrecipes">
+              <a>Create Recipes</a>
+            </Link>
+          </li>
+        </ul>
+      </div>
 
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Account settings">
@@ -71,8 +114,8 @@ const Navbar = ({ isOpen, setIsOpen }) => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>
-              {user.accessToken && getUserName()[0].toUpperCase()}
+            <Avatar sx={{ width: 40, height: 40 }}>
+              {/* {user.accessToken && userName[0]} */}
             </Avatar>
           </IconButton>
         </Tooltip>

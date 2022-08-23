@@ -10,7 +10,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { login } from "../../redux-slices/userSlice";
 import { useDispatch } from "react-redux";
-import useUser from "../../custom-hooks/useUser";
+import useLoggedIn from "../../custom-hooks/useLoggedIn";
 
 const signin = () => {
   const [state, setState] = useState({
@@ -23,7 +23,7 @@ const signin = () => {
 
   const dispatch = useDispatch();
 
-  useUser();
+  useLoggedIn();
 
   function handleClose() {
     setOpen(false);
