@@ -15,9 +15,9 @@ const Food = () => {
       <div>
         <Navbar />
         <div className="min-h-screen max-w-[1024px] mx-auto flex justify-center">
-          <div className="max-w-max mt-16 shadow-sm px-[8vw] flex flex-col gap-4 items-center">
+          <div className="max-w-max mt-16 shadow-sm px-[8vw] flex flex-col lg:flex-row gap-4 justify-center lg:items-start items-center">
             <div className="border-gray-700 border-4 rounded-lg">
-              <div className="relative h-[50vh] w-[80vw] ">
+              <div className="relative h-[50vh] w-[80vw] lg:w-[40vw] ">
                 <Image src="/images/bg.jpg" layout="fill" objectFit="cover" />
               </div>
             </div>
@@ -25,7 +25,7 @@ const Food = () => {
               <h5 className="font-extrabold text-xl text-center">
                 Fresh and Health Salad
               </h5>
-              <div className="w-[70vw] flex flex-col gap-2 justify-center items-center">
+              <div className="w-[70vw] lg:w-[40vw] flex flex-col gap-2 justify-center items-center">
                 <h5 className="font-bold text-lg text-center">Ingridents</h5>
 
                 <ul className="grid grid-cols-2 gap-x-10">
@@ -42,10 +42,10 @@ const Food = () => {
                   })}
                 </ul>
               </div>
-              <div className="w-[70vw] flex flex-col gap-2 justify-center items-center">
+              <div className="w-[70vw] lg:w-[40vw] flex flex-col gap-2 justify-center items-center">
                 <h5 className="font-bold text-lg text-center">Steps</h5>
 
-                <ol className="grid grid-cols-2 gap-x-10 border">
+                <ol className="grid grid-cols-2 gap-x-10">
                   {[
                     "Egg",
                     "Egg",
@@ -79,7 +79,7 @@ const Food = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-center border">
+              <div className="flex gap-2 justify-center">
                 <TextField variant="outlined" label="comment" />
                 <Button variant="outlined">Post</Button>
               </div>
