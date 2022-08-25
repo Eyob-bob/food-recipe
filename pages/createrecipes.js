@@ -26,6 +26,40 @@ const createrecipes = () => {
   }
   function handleSubmit(e) {
     e.preventDefault();
+    if (!fields.name) {
+      setOpen(true);
+      setMessage("Name is required");
+      return;
+    }
+    if (!fields.calories) {
+      setOpen(true);
+      setMessage("calories is required");
+      return;
+    }
+    if (!fields.time) {
+      setOpen(true);
+      setMessage("time is required");
+      return;
+    }
+    if (!fields.numOfPersons) {
+      setOpen(true);
+      setMessage("numOfPersons is required");
+      return;
+    }
+    if (ingridents.length == 0) {
+      setOpen(true);
+      setMessage("Ingridents is required");
+      return;
+    }
+    if (steps.length == 0) {
+      setOpen(true);
+      setMessage("steps is required");
+      return;
+    }
+
+    console.log(steps);
+    console.log(ingridents);
+    console.log(fields);
   }
 
   return (
@@ -131,8 +165,8 @@ const createrecipes = () => {
                   {ingridents.length == 0 ? (
                     <p className="text-red-500">No Ingridents Added</p>
                   ) : (
-                    ingridents.map((ingrident) => (
-                      <p>
+                    ingridents.map((ingrident, i) => (
+                      <p key={i}>
                         {ingrident}
                         <IconButton
                           onClick={() => {
@@ -176,8 +210,8 @@ const createrecipes = () => {
                   {steps.length == 0 ? (
                     <p className="text-red-600">No steps Added</p>
                   ) : (
-                    steps.map((step) => (
-                      <p>
+                    steps.map((step, i) => (
+                      <p key={i}>
                         {step}
                         <IconButton
                           onClick={() => {
