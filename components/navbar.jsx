@@ -33,6 +33,10 @@ const Navbar = () => {
     setAnchorEl(null);
   };
 
+  const closeSideNav = () => {
+    dispatch(closed());
+  };
+
   React.useEffect(() => {
     const accessData = jwt.decode(
       user.accessToken,
@@ -42,140 +46,159 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="flex justify-between items-center h-14 border w-screen p-4 shadow-sm z-50 fixed bg-white">
-      <div className="flex gap-4 h-[100%] items-center ">
-        <IconButton
-          className="text-black"
-          onClick={() => {
-            dispatch(opened());
-          }}
-        >
-          <ListIcon className="md:hidden w-8 h-8" />
-        </IconButton>
-        <h1 className="text-xl md:text-3xl">
-          <Link href="/">
-            <a>
-              <b className="text-orange-500">Food</b> Recipe
-            </a>
-          </Link>
-        </h1>
-      </div>
-
-      <div
-        className={`md:static md:w-auto md:bg-transparent md:h-auto fixed left-0 top-0 bg-orange-700 text-white h-screen w-[50%] transition-all md:border md:p-2 md:rounded-xl md:shadow-inner md:text-black  ${
-          !isOpen && "w-0 overflow-hidden "
-        }`}
-      >
-        <IconButton
-          className=" absolute right-3 top-3 text-white "
-          onClick={() => {
-            dispatch(closed());
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-
-        <ul className="md:flex-row md flex flex-col gap-4 justify-center items-center h-full">
-          <li className={router.pathname == "/" ? "active" : ""}>
-            <Link href="/">
-              <a>Home</a>
-            </Link>
-          </li>
-          <li className={router.pathname == "/favorite" ? "active" : ""}>
-            <Link href="/favorite">
-              <a>Favorite</a>
-            </Link>
-          </li>
-          <li className={router.pathname == "/bookmark" ? "active" : ""}>
-            <Link href="/bookmark">
-              <a>Bookmark</a>
-            </Link>
-          </li>
-          <li className={router.pathname == "/myrecipes" ? "active" : ""}>
-            <Link href="/myrecipes">
-              <a>My Recipes</a>
-            </Link>
-          </li>
-          <li className={router.pathname == "/createrecipes" ? "active" : ""}>
-            <Link href="/createrecipes">
-              <a>Create Recipes</a>
-            </Link>
-          </li>
-        </ul>
-      </div>
-
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Tooltip title="Account settings">
+    <div className="h-14 border w-screen p-4 shadow-sm z-50 fixed bg-white">
+      <div className="w-full flex justify-between items-center h-full ">
+        <div className="flex gap-4 h-[100%] items-center max-w-[1024px]">
           <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
+            className="text-black"
+            onClick={() => {
+              dispatch(opened());
+            }}
           >
-            <Avatar sx={{ width: 40, height: 40 }}>
-              {/* {user.accessToken && userName[0]} */}
-            </Avatar>
+            <ListIcon className="md:hidden w-8 h-8" />
           </IconButton>
-        </Tooltip>
-      </Box>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      >
-        {user.accessToken ? (
-          <MenuItem>
-            <Button
-              variant="text"
-              onClick={() => {
-                dispatch(logout());
-              }}
+          <h1 className="text-xl md:text-3xl">
+            <Link href="/">
+              <a>
+                <b className="text-orange-500">Food</b> Recipe
+              </a>
+            </Link>
+          </h1>
+        </div>
+
+        <div
+          className={`md:static md:w-auto md:bg-transparent md:h-auto fixed left-0 top-0 bg-orange-700 text-white h-screen w-[50%] transition-all md:border md:p-2 md:rounded-xl md:shadow-inner md:text-black  ${
+            !isOpen && "w-0 overflow-hidden "
+          }`}
+        >
+          <IconButton
+            className=" absolute right-3 top-3 text-white "
+            onClick={() => {
+              dispatch(closed());
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <ul className="md:flex-row md flex flex-col gap-4 justify-center items-center h-full">
+            <li
+              onClick={closeSideNav}
+              className={router.pathname == "/" ? "active" : ""}
             >
-              Logout
-            </Button>
-          </MenuItem>
-        ) : (
-          <Link href="/auth/signin">
-            <a>
-              <MenuItem>
-                <Button variant="text">Login </Button>
-              </MenuItem>
-            </a>
-          </Link>
-        )}
-      </Menu>
+              <Link href="/">
+                <a>Home</a>
+              </Link>
+            </li>
+            <li
+              onClick={closeSideNav}
+              className={router.pathname == "/favorite" ? "active" : ""}
+            >
+              <Link href="/favorite">
+                <a>Favorite</a>
+              </Link>
+            </li>
+            <li
+              onClick={closeSideNav}
+              className={router.pathname == "/bookmark" ? "active" : ""}
+            >
+              <Link href="/bookmark">
+                <a>Bookmark</a>
+              </Link>
+            </li>
+            <li
+              onClick={closeSideNav}
+              className={router.pathname == "/myrecipes" ? "active" : ""}
+            >
+              <Link href="/myrecipes">
+                <a>My Recipes</a>
+              </Link>
+            </li>
+            <li
+              onClick={closeSideNav}
+              className={router.pathname == "/createrecipes" ? "active" : ""}
+            >
+              <Link href="/createrecipes">
+                <a>Create Recipes</a>
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <Box
+          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
+        >
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <Avatar sx={{ width: 40, height: 40 }}>
+                {/* {user.accessToken && userName[0]} */}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          {user.accessToken ? (
+            <MenuItem>
+              <Button
+                variant="text"
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
+                Logout
+              </Button>
+            </MenuItem>
+          ) : (
+            <Link href="/auth/signin">
+              <a>
+                <MenuItem>
+                  <Button variant="text">Login </Button>
+                </MenuItem>
+              </a>
+            </Link>
+          )}
+        </Menu>
+      </div>
     </div>
   );
 };
