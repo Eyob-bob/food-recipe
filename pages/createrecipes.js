@@ -5,10 +5,13 @@ import Navbar from "../components/navbar";
 import { useState } from "react";
 import { Alert, IconButton, Snackbar, Stack } from "@mui/material";
 import Trash from "@mui/icons-material/Delete";
+import instance from "../lib/axiosConfig";
 
 const createrecipes = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [fields, setFields] = useState({
     name: "",
     calories: "",
@@ -16,6 +19,7 @@ const createrecipes = () => {
     numOfPersons: "",
     ingrident: "",
     step: "",
+    photo: "",
   });
 
   const [ingridents, setIngridents] = useState([]);
@@ -24,7 +28,11 @@ const createrecipes = () => {
   function handleClose() {
     setOpen(false);
   }
-  function handleSubmit(e) {
+  function handleSuccessClose() {
+    setSuccessOpen(false);
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!fields.name) {
       setOpen(true);
@@ -56,10 +64,52 @@ const createrecipes = () => {
       setMessage("steps is required");
       return;
     }
+    if (steps.length == 0) {
+      setOpen(true);
+      setMessage("steps is required");
+      return;
+    }
+    if (fields.photo.length == 0) {
+      setOpen(true);
+      setMessage("Photo is required");
+      return;
+    }
 
-    console.log(steps);
-    console.log(ingridents);
-    console.log(fields);
+    const formData = new FormData();
+    formData.append("name", fields.name);
+    formData.append("photo", fields.photo);
+    formData.append("numOfPersons", fields.numOfPersons);
+    formData.append("time", fields.time);
+    formData.append("calories", fields.calories);
+    formData.append("ingridents", ingridents);
+    formData.append("steps", steps);
+
+    const data = (
+      await instance.post("/recipe/add", formData, {
+        headers: {
+          authorization:
+            "Brear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzA3ZDA1ZjEyN2QzMzZhYWRjMDM2NDUiLCJ2ZXJpZmllZCI6dHJ1ZSwibmFtZSI6Ikl2YW5hIEZyYXppZXIiLCJpYXQiOjE2NjE0NTc4OTksImV4cCI6MTY2MTQ1ODc5OX0.k7OIVwdXEX_nxUQaGnPZ8rp2YhqWG_9ZccYoJM_kPtE",
+          "content-type": "application/json",
+          "content-type": "multipart/form-data",
+        },
+      })
+    ).data;
+
+    setSuccessOpen(true);
+    setSuccessMessage("Recipe Created Successfully");
+
+    setFields({
+      name: "",
+      calories: "",
+      time: "",
+      numOfPersons: "",
+      ingrident: "",
+      step: "",
+      photo: "",
+    });
+
+    setIngridents([]);
+    setSteps([]);
   }
 
   return (
@@ -71,6 +121,21 @@ const createrecipes = () => {
           </Alert>
         </Snackbar>
       </Stack>
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={2000}
+          onClose={handleSuccessClose}
+        >
+          <Alert
+            onClose={handleSuccessClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            {successMessage}
+          </Alert>
+        </Snackbar>
+      </Stack>
       <Head>
         <title>Create Recipes</title>
       </Head>
@@ -79,6 +144,7 @@ const createrecipes = () => {
         <div className="h-screen border grid place-content-center w-screen">
           <form
             onSubmit={handleSubmit}
+            encType="multipart/form-data"
             className="flex flex-col justify-center items-center gap-6 w-[70vw]"
           >
             <div className="flex flex-col md:flex-row gap-4">
@@ -134,6 +200,17 @@ const createrecipes = () => {
                     }))
                   }
                 />
+                <TextField
+                  variant="outlined"
+                  type="file"
+                  name="photo"
+                  onChange={(e) =>
+                    setFields((prev) => ({
+                      ...prev,
+                      photo: e.target.files[0],
+                    }))
+                  }
+                />
               </div>
 
               <div className="flex flex-col md:flex-row gap-2 w-fit">
@@ -153,6 +230,7 @@ const createrecipes = () => {
                     />
                     <Button
                       onClick={() => {
+                        if (!fields.ingrident) return;
                         setIngridents((prev) => [...prev, fields.ingrident]);
                         setFields((prev) => ({ ...prev, ingrident: "" }));
                       }}
@@ -198,6 +276,7 @@ const createrecipes = () => {
                     />
                     <Button
                       onClick={() => {
+                        if (!fields.step) return;
                         setSteps((prev) => [...prev, fields.step]);
                         setFields((prev) => ({ ...prev, step: "" }));
                       }}
