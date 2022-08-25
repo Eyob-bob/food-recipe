@@ -1,7 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import Navbar from "../components/navbar";
+import Card from "../components/card";
 
 export default function Home() {
   return (
@@ -11,69 +13,23 @@ export default function Home() {
       </Head>
       <div>
         <Navbar />
-        <div className="min-h-screen border flex justify-center">
-          <div className="max-w-max mt-20">
-            <h1 className="text-3xl font-extrabold mb-10">Added Dishes</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              <div className="w-60 flex flex-col justify-center items-center gap-4 rounded-md bg-gray-50 pb-2 border hover:scale-105 cursor-pointer transition-all">
-                <div className="relative h-32 w-full">
-                  <Image src="/vercel.svg" layout="fill" objectFit="contain" />
-                </div>
-                <h5 className="font-extrabold text-lg">
-                  Fresh and Health Salad
-                </h5>
-                <p className="text-gray-600 text-md">60 calories</p>
-                <div className="border w-[90%]"></div>
-                <div className="flex gap-8">
-                  <div className="flex flex-col gap-1">
-                    <p className="text-gray-600 text-md">Time</p>
-                    <p className="text-sm">5 min</p>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-gray-600 text-md">Portion</p>
-                    <p className="text-sm">3 person</p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-60 flex flex-col justify-center items-center gap-4 rounded-md bg-gray-50 pb-2 border hover:scale-105 cursor-pointer transition-all">
-                <div className="relative h-32 w-full">
-                  <Image src="/vercel.svg" layout="fill" objectFit="contain" />
-                </div>
-                <h5 className="font-extrabold text-lg">
-                  Fresh and Health Salad
-                </h5>
-                <p className="text-gray-600 text-md">60 calories</p>
-                <div className="border w-[90%]"></div>
-                <div className="flex gap-8">
-                  <div className="flex flex-col gap-1">
-                    <p className="text-gray-600 text-md">Time</p>
-                    <p className="text-sm">5 min</p>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-gray-600 text-md">Portion</p>
-                    <p className="text-sm">3 person</p>
-                  </div>
-                </div>
-              </div>
-              <div className="w-60 flex flex-col justify-center items-center gap-4 rounded-md bg-gray-50 pb-2 border hover:scale-105 cursor-pointer transition-all">
-                <div className="relative h-32 w-full">
-                  <Image src="/vercel.svg" layout="fill" objectFit="contain" />
-                </div>
-                <h5 className="font-extrabold text-lg">
-                  Fresh and Health Salad
-                </h5>
-                <p className="text-gray-600 text-md">60 calories</p>
-                <div className="border w-[90%]"></div>
-                <div className="flex gap-8">
-                  <div className="flex flex-col gap-1">
-                    <p className="text-gray-600 text-md">Time</p>
-                    <p className="text-sm">5 min</p>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-gray-600 text-md">Portion</p>
-                    <p className="text-sm">3 person</p>
-                  </div>
-                </div>
+        <div className="min-h-screen w-screen max-w-[1024px] mx-auto flex justify-center">
+          <div className=" w-full mt-14 shadow-sm px-10">
+            <div className="relative h-[40vh] w-full border text-center ">
+              <h1 className="absolute z-30 text-3xl font-extrabold text-white left-0 right-0 top-[50%]">
+                Food Recipes
+              </h1>
+              <Image src="/images/bg.jpg" layout="fill" objectFit="cover" />
+            </div>
+            <div className="flex flex-col justify-center items-center border">
+              <h2 className="text-2xl font-extrabold my-10">All Dishes</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
               </div>
             </div>
           </div>
