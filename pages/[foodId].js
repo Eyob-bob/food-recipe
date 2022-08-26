@@ -1,12 +1,32 @@
 import Head from "next/head";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FavoriteOutlined from "@mui/icons-material/FavoriteBorderOutlined";
 import BookmarkOutlined from "@mui/icons-material/BookmarkAddOutlined";
 import Navbar from "../components/navbar";
 import { Avatar, Button, IconButton, TextField } from "@mui/material";
+import { useRouter } from "next/router";
+import instance from "../lib/axiosConfig";
 
 const Food = () => {
+  const router = useRouter();
+  const [recipe, setRecipe] = useState({});
+  const [ingrident, setIngrident] = useState([]);
+  const [step, setStep] = useState([]);
+
+  async function getOneRecipe(id) {
+    const data = (await instance.get(`/recipe/getOne/${id}`)).data;
+    setRecipe(data.recipe);
+    setIngrident(data.ingrident.name);
+    setStep(data.step.name);
+  }
+
+  useEffect(() => {
+    if (router.query.foodId) {
+      getOneRecipe(router.query.foodId);
+    }
+  }, [router.query]);
+
   return (
     <>
       <Head>
@@ -18,26 +38,18 @@ const Food = () => {
           <div className="max-w-max mt-16 shadow-sm px-[8vw] flex flex-col lg:flex-row gap-4 justify-center lg:items-start items-center">
             <div className="border-gray-700 border-4 rounded-lg">
               <div className="relative h-[50vh] w-[80vw] lg:w-[40vw] ">
-                <Image src="/images/bg.jpg" layout="fill" objectFit="cover" />
+                <Image src={recipe.photo} layout="fill" objectFit="cover" />
               </div>
             </div>
             <div className="flex flex-col gap-4">
               <h5 className="font-extrabold text-xl text-center">
-                Fresh and Health Salad
+                {recipe.name}
               </h5>
               <div className="w-[70vw] lg:w-[40vw] flex flex-col gap-2 justify-center items-center">
                 <h5 className="font-bold text-lg text-center">Ingridents</h5>
 
                 <ul className="grid grid-cols-2 gap-x-10">
-                  {[
-                    "Egg",
-                    "Egg",
-                    "Chakra UI vs Material Ui",
-                    "Egg",
-                    "Egg",
-                    "Bro how are you",
-                    "Egg",
-                  ].map((ing) => {
+                  {ingrident.map((ing) => {
                     return <li>* {ing}</li>;
                   })}
                 </ul>
@@ -46,18 +58,10 @@ const Food = () => {
                 <h5 className="font-bold text-lg text-center">Steps</h5>
 
                 <ol className="grid grid-cols-2 gap-x-10">
-                  {[
-                    "Egg",
-                    "Egg",
-                    "Chakra UI vs Material Ui",
-                    "Egg",
-                    "Egg",
-                    "Egg",
-                    "Egg",
-                  ].map((ing, i) => {
+                  {step.map((s, i) => {
                     return (
                       <li>
-                        Step {++i}) {ing}
+                        Step {++i}) {s}
                       </li>
                     );
                   })}

@@ -43,13 +43,13 @@ export default function Home() {
                 {recipes.map((recipe) => {
                   return (
                     <Card
+                      key={recipe._id}
                       name={recipe.name}
                       time={recipe.timeInMin}
                       calories={recipe.calories}
                       person={recipe.numOfPersons}
                       photo={recipe.photo}
                       id={recipe._id}
-                      key={recipe._id}
                     />
                   );
                 })}
