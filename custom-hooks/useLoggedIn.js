@@ -10,7 +10,7 @@ const useLoggedIn = () => {
   useLayoutEffect(() => {
     if (user.accessToken) router.push("/");
     else setIsLoading(false);
-  }, []);
+  }, [user.accessToken]);
 
   return isLoading;
 };

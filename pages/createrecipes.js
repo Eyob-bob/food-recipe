@@ -93,7 +93,7 @@ const createrecipes = () => {
       data = (
         await instance.post("/recipe/add", formData, {
           headers: {
-            authorization: `Brear ${user}`,
+            authorization: `Brear ${user.accessToken}`,
             "content-type": "application/json",
             "content-type": "multipart/form-data",
           },

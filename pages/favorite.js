@@ -4,8 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import Navbar from "../components/navbar";
 import Card from "../components/card";
+import useLoggedOut from "../custom-hooks/useLoggedOut";
 
 export default function Favorite() {
+  const isLoading = useLoggedOut();
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <>
       <Head>

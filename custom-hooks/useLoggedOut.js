@@ -10,7 +10,7 @@ const useLoggedOut = () => {
   useLayoutEffect(() => {
     if (!user.accessToken) router.replace("/auth/signin");
     else setIsLoading(false);
-  }, []);
+  }, [user.accessToken]);
 
   return isLoading;
 };
