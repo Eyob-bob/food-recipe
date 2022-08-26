@@ -37,7 +37,7 @@ const signup = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
-  useLoggedIn();
+  const isLoading = useLoggedIn();
 
   async function handleSignup(e) {
     e.preventDefault();
@@ -64,6 +64,8 @@ const signup = () => {
   function handleClose() {
     setOpen(false);
   }
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>

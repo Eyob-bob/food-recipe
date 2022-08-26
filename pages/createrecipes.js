@@ -6,8 +6,12 @@ import { useState } from "react";
 import { Alert, IconButton, Snackbar, Stack } from "@mui/material";
 import Trash from "@mui/icons-material/Delete";
 import instance from "../lib/axiosConfig";
+import useLoggedOut from "../custom-hooks/useLoggedOut";
+import useUser from "../custom-hooks/useUser";
 
 const createrecipes = () => {
+  const isLoading = useLoggedOut();
+  const user = useUser();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [successOpen, setSuccessOpen] = useState(false);
@@ -89,8 +93,7 @@ const createrecipes = () => {
       data = (
         await instance.post("/recipe/add", formData, {
           headers: {
-            authorization:
-              "Brear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzA3ZDA1ZjEyN2QzMzZhYWRjMDM2NDUiLCJ2ZXJpZmllZCI6dHJ1ZSwibmFtZSI6Ikl2YW5hIEZyYXppZXIiLCJpYXQiOjE2NjE0NTc4OTksImV4cCI6MTY2MTQ1ODc5OX0.k7OIVwdXEX_nxUQaGnPZ8rp2YhqWG_9ZccYoJM_kPtE",
+            authorization: `Brear ${user}`,
             "content-type": "application/json",
             "content-type": "multipart/form-data",
           },
@@ -117,6 +120,8 @@ const createrecipes = () => {
       setMessage(err.message);
     }
   }
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>

@@ -23,7 +23,7 @@ const signin = () => {
 
   const dispatch = useDispatch();
 
-  useLoggedIn();
+  const isLoading = useLoggedIn();
 
   function handleClose() {
     setOpen(false);
@@ -46,6 +46,8 @@ const signin = () => {
       setMessage(err.response.data);
     }
   }
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
