@@ -84,32 +84,38 @@ const createrecipes = () => {
     formData.append("ingridents", ingridents);
     formData.append("steps", steps);
 
-    const data = (
-      await instance.post("/recipe/add", formData, {
-        headers: {
-          authorization:
-            "Brear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzA3ZDA1ZjEyN2QzMzZhYWRjMDM2NDUiLCJ2ZXJpZmllZCI6dHJ1ZSwibmFtZSI6Ikl2YW5hIEZyYXppZXIiLCJpYXQiOjE2NjE0NTc4OTksImV4cCI6MTY2MTQ1ODc5OX0.k7OIVwdXEX_nxUQaGnPZ8rp2YhqWG_9ZccYoJM_kPtE",
-          "content-type": "application/json",
-          "content-type": "multipart/form-data",
-        },
-      })
-    ).data;
+    let data;
+    try {
+      data = (
+        await instance.post("/recipe/add", formData, {
+          headers: {
+            authorization:
+              "Brear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzA3ZDA1ZjEyN2QzMzZhYWRjMDM2NDUiLCJ2ZXJpZmllZCI6dHJ1ZSwibmFtZSI6Ikl2YW5hIEZyYXppZXIiLCJpYXQiOjE2NjE0NTc4OTksImV4cCI6MTY2MTQ1ODc5OX0.k7OIVwdXEX_nxUQaGnPZ8rp2YhqWG_9ZccYoJM_kPtE",
+            "content-type": "application/json",
+            "content-type": "multipart/form-data",
+          },
+        })
+      ).data;
 
-    setSuccessOpen(true);
-    setSuccessMessage("Recipe Created Successfully");
+      setSuccessOpen(true);
+      setSuccessMessage("Recipe Created Successfully");
 
-    setFields({
-      name: "",
-      calories: "",
-      time: "",
-      numOfPersons: "",
-      ingrident: "",
-      step: "",
-      photo: "",
-    });
+      setFields({
+        name: "",
+        calories: "",
+        time: "",
+        numOfPersons: "",
+        ingrident: "",
+        step: "",
+        photo: "",
+      });
 
-    setIngridents([]);
-    setSteps([]);
+      setIngridents([]);
+      setSteps([]);
+    } catch (err) {
+      setOpen(true);
+      setMessage(err.message);
+    }
   }
 
   return (
