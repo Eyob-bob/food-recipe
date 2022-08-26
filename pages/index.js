@@ -1,11 +1,27 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Card from "../components/card";
+import instance from "../lib/axiosConfig";
 
 export default function Home() {
+  const [recipes, setRecipes] = useState([]);
+  const [ingridents, setIngridents] = useState([]);
+  const [steps, setSteps] = useState([]);
+
+  async function fetchAllRecipe() {
+    const allRecipe = (await instance.get("/recipe/getAll")).data;
+    setRecipes(allRecipe.allRecipe);
+    setSteps(allRecipe.allStep);
+    setIngridents(allRecipe.allIngrident);
+  }
+
+  useEffect(() => {
+    fetchAllRecipe();
+  }, []);
+
   return (
     <>
       <Head>
@@ -24,12 +40,19 @@ export default function Home() {
             <div className="flex flex-col justify-center items-center border">
               <h2 className="text-2xl font-extrabold my-10">All Dishes</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
+                {recipes.map((recipe) => {
+                  return (
+                    <Card
+                      name={recipe.name}
+                      time={recipe.timeInMin}
+                      calories={recipe.calories}
+                      person={recipe.numOfPersons}
+                      photo={recipe.photo}
+                      id={recipe._id}
+                      key={recipe._id}
+                    />
+                  );
+                })}
               </div>
             </div>
           </div>
