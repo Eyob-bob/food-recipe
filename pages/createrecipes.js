@@ -2,16 +2,23 @@ import Head from "next/head";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Navbar from "../components/navbar";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, IconButton, Snackbar, Stack } from "@mui/material";
 import Trash from "@mui/icons-material/Delete";
 import instance from "../lib/axiosConfig";
 import useLoggedOut from "../custom-hooks/useLoggedOut";
 import useUser from "../custom-hooks/useUser";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../redux-slices/userSlice";
+import jwt from "jsonwebtoken";
+import instanceUser from "../lib/axiosUserConfig";
+import interceptAxios from "../lib/axiosUserConfig";
 
 const createrecipes = () => {
   const isLoading = useLoggedOut();
   const user = useUser();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [successOpen, setSuccessOpen] = useState(false);
@@ -28,6 +35,38 @@ const createrecipes = () => {
 
   const [ingridents, setIngridents] = useState([]);
   const [steps, setSteps] = useState([]);
+  const fileRef = useRef(null);
+
+  async function refreshToken() {
+    try {
+      const refresh = (
+        await instance.post("auth/refresh", {
+          refreshToken: user.refreshToken,
+        })
+      ).data;
+      localStorage.setItem("accessToken", refresh.accessToken);
+      dispatch(login());
+
+      return refresh.accessToken;
+    } catch (err) {
+      throw Error("Error Occured");
+    }
+  }
+
+  interceptAxios.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
+      const decodedToken = jwt.decode(user.accessToken);
+
+      if (decodedToken.exp * 1000 < currentDate.getTime()) {
+        const data = await refreshToken();
+        config.headers["authorization"] = "Bearer " + data;
+      }
+
+      return config;
+    },
+    (err) => Promise.reject(err)
+  );
 
   function handleClose() {
     setOpen(false);
@@ -91,31 +130,34 @@ const createrecipes = () => {
     let data;
     try {
       data = (
-        await instance.post("/recipe/add", formData, {
+        await interceptAxios.post("/recipe/add", formData, {
           headers: {
-            authorization: `Brear ${user.accessToken}`,
-            "content-type": "application/json",
-            "content-type": "multipart/form-data",
+            authorization: `Bearer ${user.accessToken}`,
           },
         })
       ).data;
 
-      setSuccessOpen(true);
-      setSuccessMessage("Recipe Created Successfully");
+      if (data) {
+        setSuccessOpen(true);
+        setSuccessMessage("Recipe Created Successfully");
 
-      setFields({
-        name: "",
-        calories: "",
-        time: "",
-        numOfPersons: "",
-        ingrident: "",
-        step: "",
-        photo: "",
-      });
+        fileRef.current.value = null;
 
-      setIngridents([]);
-      setSteps([]);
+        setFields({
+          name: "",
+          calories: "",
+          time: "",
+          numOfPersons: "",
+          ingrident: "",
+          step: "",
+          photo: "",
+        });
+
+        setIngridents([]);
+        setSteps([]);
+      }
     } catch (err) {
+      console.log(err);
       setOpen(true);
       setMessage(err.message);
     }
@@ -215,6 +257,7 @@ const createrecipes = () => {
                   variant="outlined"
                   type="file"
                   name="photo"
+                  ref={fileRef}
                   onChange={(e) =>
                     setFields((prev) => ({
                       ...prev,
