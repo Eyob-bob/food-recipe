@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useUser from "./useUser";
 
 const useLoggedOut = () => {
@@ -7,7 +7,7 @@ const useLoggedOut = () => {
   const user = useUser();
   const [isLoading, setIsLoading] = useState(true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!user.accessToken) router.replace("/auth/signin");
     else setIsLoading(false);
   }, [user.accessToken]);

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useUser from "./useUser";
 
 const useLoggedIn = () => {
@@ -7,7 +7,7 @@ const useLoggedIn = () => {
   const user = useUser();
   const [isLoading, setIsLoading] = useState(true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (user.accessToken) router.push("/");
     else setIsLoading(false);
   }, [user.accessToken]);

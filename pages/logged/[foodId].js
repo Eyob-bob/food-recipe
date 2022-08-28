@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import FavoriteOutlined from "@mui/icons-material/FavoriteBorderOutlined";
 import Favorite from "@mui/icons-material/Favorite";
 import Bookmark from "@mui/icons-material/Bookmark";
-import BookmarkOutlined from "@mui/icons-material/BookmarkAddOutlined";
 import Navbar from "../../components/navbar";
 import {
   Alert,
@@ -27,6 +26,7 @@ import useLoggedOut from "../../custom-hooks/useLoggedOut";
 
 const Food = () => {
   const router = useRouter();
+  const isLoading = useLoggedOut();
   const [recipe, setRecipe] = useState({});
   const [ingrident, setIngrident] = useState([]);
   const [step, setStep] = useState([]);
@@ -39,7 +39,6 @@ const Food = () => {
   const [message, setMessage] = useState("");
   const user = useUser();
   const dispatch = useDispatch();
-  const isLoading = useLoggedOut();
 
   function handleClose() {
     setOpen(false);

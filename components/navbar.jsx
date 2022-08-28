@@ -43,20 +43,21 @@ const Navbar = () => {
       process.env.ACCESS_TOKEN_SECRET
     );
     if (accessData) setUserName(accessData.name);
-  }, []);
+  }, [user.accessToken]);
 
   return (
-    <div className="h-14 border w-screen p-4 shadow-sm z-50 fixed bg-white">
-      <div className="w-full flex justify-between items-center h-full ">
-        <div className="flex gap-4 h-[100%] items-center max-w-[1024px]">
-          <IconButton
-            className="text-black"
-            onClick={() => {
-              dispatch(opened());
-            }}
-          >
-            <ListIcon className="md:hidden w-8 h-8" />
-          </IconButton>
+    <div className="h-14 border w-screen p-4 shadow-sm z-50 fixed bg-white ">
+      <div className="w-full flex justify-between items-center h-full max-w-[1024px] m-auto">
+        <div className="flex gap-4 h-full items-center">
+          <div className="md:hidden">
+            <IconButton
+              onClick={() => {
+                dispatch(opened());
+              }}
+            >
+              <ListIcon />
+            </IconButton>
+          </div>
           <h1 className="text-xl md:text-3xl">
             <Link href="/">
               <a>
@@ -67,20 +68,21 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`md:static md:w-auto md:bg-transparent md:h-auto fixed left-0 top-0 bg-orange-700 text-white h-screen w-[50%] transition-all md:border md:p-2 md:rounded-xl md:shadow-inner md:text-black  ${
+          className={`md:static md:w-auto md:bg-transparent md:h-fit fixed left-0 top-0 bg-orange-700 text-white h-screen w-[50%] transition-all md:border md:p-2 md:rounded-xl md:shadow-inner md:text-black  ${
             !isOpen && "w-0 overflow-hidden "
           }`}
         >
-          <IconButton
-            className=" absolute right-3 top-3 text-white "
-            onClick={() => {
-              dispatch(closed());
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <div className="absolute right-3 top-3 text-white md:hidden">
+            <IconButton
+              onClick={() => {
+                dispatch(closed());
+              }}
+            >
+              <CloseIcon className="text-white" />
+            </IconButton>
+          </div>
 
-          <ul className="md:flex-row md flex flex-col gap-4 justify-center items-center h-full">
+          <ul className="md:flex-row md:h-fit flex flex-col gap-4 justify-center items-center h-full">
             <li
               onClick={closeSideNav}
               className={router.pathname == "/" ? "active" : ""}
@@ -137,7 +139,7 @@ const Navbar = () => {
               aria-expanded={open ? "true" : undefined}
             >
               <Avatar sx={{ width: 40, height: 40 }}>
-                {/* {user.accessToken && userName[0]} */}
+                {user.accessToken && userName[0]}
               </Avatar>
             </IconButton>
           </Tooltip>

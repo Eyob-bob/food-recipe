@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../redux-slices/userSlice";
 import { Button } from "@mui/material";
 
-const verify = ({ accessToken, refreshToken }) => {
+const Verify = ({ accessToken, refreshToken }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -51,4 +51,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default verify;
+export default Verify;

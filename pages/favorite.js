@@ -1,6 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Card from "../components/card";

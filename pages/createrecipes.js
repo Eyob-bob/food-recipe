@@ -8,14 +8,12 @@ import Trash from "@mui/icons-material/Delete";
 import instance from "../lib/axiosConfig";
 import useLoggedOut from "../custom-hooks/useLoggedOut";
 import useUser from "../custom-hooks/useUser";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../redux-slices/userSlice";
 import jwt from "jsonwebtoken";
-import instanceUser from "../lib/axiosUserConfig";
 import interceptAxios from "../lib/axiosUserConfig";
 
-const createrecipes = () => {
+const Createrecipes = () => {
   const isLoading = useLoggedOut();
   const user = useUser();
   const dispatch = useDispatch();
@@ -375,4 +373,4 @@ const createrecipes = () => {
   );
 };
 
-export default createrecipes;
+export default Createrecipes;

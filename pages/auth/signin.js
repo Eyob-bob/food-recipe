@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-// import { TextField, Button, Snackbar, Alert } from "@mui/material";
 import instance from "../../lib/axiosConfig";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
@@ -11,8 +10,9 @@ import Alert from "@mui/material/Alert";
 import { login } from "../../redux-slices/userSlice";
 import { useDispatch } from "react-redux";
 import useLoggedIn from "../../custom-hooks/useLoggedIn";
+import { CircularProgress } from "@mui/material";
 
-const signin = () => {
+const Signin = () => {
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -25,12 +25,15 @@ const signin = () => {
 
   const isLoading = useLoggedIn();
 
+  const [loadingAuth, setLoadingAuth] = useState(false);
+
   function handleClose() {
     setOpen(false);
   }
 
   async function handleSignin(e) {
     e.preventDefault();
+    setLoadingAuth(true);
 
     try {
       const data = await (
@@ -42,6 +45,7 @@ const signin = () => {
 
       dispatch(login());
     } catch (err) {
+      setLoadingAuth(false);
       setOpen(true);
       setMessage(err.response.data);
     }
@@ -63,6 +67,7 @@ const signin = () => {
         <title>Signin</title>
       </Head>
       <div className="h-screen border grid place-content-center w-screen">
+        <h1 className="text-3xl mb-4">Sign In</h1>
         <form
           onSubmit={handleSignin}
           className="flex flex-col gap-4 w-[70vw] sm:w-[50vw] md:w-[30vw]"
@@ -100,9 +105,13 @@ const signin = () => {
         <p className="text-center mt-4">
           Doesn't have an account?{" "}
           <Button variant="text" className="capitalize">
-            <Link href="signup">
-              <a className="font-bold">Sign Up</a>
-            </Link>
+            {loadingAuth ? (
+              <CircularProgress />
+            ) : (
+              <Link href="signup">
+                <a className="font-bold">Sign Up</a>
+              </Link>
+            )}
           </Button>
         </p>
       </div>
@@ -110,4 +119,4 @@ const signin = () => {
   );
 };
 
-export default signin;
+export default Signin;

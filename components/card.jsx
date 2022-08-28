@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import useUser from "../custom-hooks/useUser";
 
-const card = ({ name, calories, time, person, photo, id }) => {
+const Card = ({ name, calories, time, person, photo, id }) => {
   const user = useUser();
 
   return (
@@ -35,4 +35,4 @@ const card = ({ name, calories, time, person, photo, id }) => {
   );
 };
 
-export default card;
+export default Card;

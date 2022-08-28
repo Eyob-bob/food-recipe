@@ -9,6 +9,7 @@ import { useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import instance from "../../lib/axiosConfig.js";
 import useLoggedIn from "../../custom-hooks/useLoggedIn.js";
+import { CircularProgress } from "@mui/material";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -32,15 +33,17 @@ const initialState = {
   verifyPassword: "",
 };
 
-const signup = () => {
+const Signup = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const [loadingAuth, setLoadingAuth] = useState(false);
   const isLoading = useLoggedIn();
 
   async function handleSignup(e) {
     e.preventDefault();
+    setLoadingAuth(true);
     if (state.password != state.verifyPassword) {
       setOpen(true);
       setMessage("Password doesn't match with confirm password");
@@ -56,6 +59,7 @@ const signup = () => {
           router.push(`verify/${state.email}`);
         }
       } catch (err) {
+        setLoadingAuth(false);
         setOpen(true);
         setMessage(err.response.data);
       }
@@ -80,6 +84,8 @@ const signup = () => {
         <title>Signup</title>
       </Head>
       <div className="h-screen border grid place-content-center w-screen">
+        <h1 className="text-3xl mb-4">Sign Up</h1>
+
         <form
           className="flex flex-col gap-4 w-[70vw] sm:w-[50vw] md:w-[30vw]"
           onSubmit={handleSignup}
@@ -138,9 +144,13 @@ const signup = () => {
         <p className="text-center mt-4">
           Have an account?{" "}
           <Button variant="text" className="capitalize">
-            <Link href="signin">
-              <a className="font-bold">Sign In</a>
-            </Link>
+            {loadingAuth ? (
+              <CircularProgress />
+            ) : (
+              <Link href="signin">
+                <a className="font-bold">Sign In</a>
+              </Link>
+            )}
           </Button>
         </p>
       </div>
@@ -148,4 +158,4 @@ const signup = () => {
   );
 };
 
-export default signup;
+export default Signup;
