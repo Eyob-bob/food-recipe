@@ -72,16 +72,6 @@ const Food = () => {
                     })}
                   </ol>
                 </div>
-                <div className="w-[70vw] lg:w-[40vw] flex flex-col gap-2 justify-center items-center border">
-                  <p>Comments</p>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-1">
-                      <Avatar>E</Avatar>
-                      <p className="text-gray-600">Eyob Abebe</p>
-                    </div>
-                    <p>That is Cool!</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

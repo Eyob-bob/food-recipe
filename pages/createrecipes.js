@@ -130,7 +130,7 @@ const Createrecipes = () => {
       data = (
         await interceptAxios.post("/recipe/add", formData, {
           headers: {
-            authorization: `Bearer ${user.accessToken}`,
+            authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
           },
         })
       ).data;

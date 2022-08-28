@@ -81,7 +81,7 @@ const Food = () => {
   interceptAxios.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
-      const decodedToken = jwt.decode(user.accessToken);
+      const decodedToken = jwt.decode(localStorage.getItem("accessToken"));
 
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();
@@ -97,8 +97,6 @@ const Food = () => {
     if (router.query.foodId) {
       getOneRecipe(router.query.foodId);
     }
-
-    console.log(allComment);
   }, [router.query]);
 
   if (isLoading) return <p>Loading...</p>;
