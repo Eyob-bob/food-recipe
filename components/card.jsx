@@ -1,10 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import useUser from "../custom-hooks/useUser";
 
 const card = ({ name, calories, time, person, photo, id }) => {
+  const user = useUser();
+
   return (
-    <Link href={`/${id}`}>
+    <Link href={user.refreshToken ? `/logged/${id}` : `/${id}`}>
       <div className="w-60 flex flex-col justify-center items-center gap-4 rounded-md bg-gray-100 pb-2 hover:scale-105 cursor-pointer transition-all shadow-md">
         <div className="relative h-32 w-full">
           <Image
