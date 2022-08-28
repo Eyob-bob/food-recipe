@@ -83,6 +83,8 @@ const Food = () => {
       const currentDate = new Date();
       const decodedToken = jwt.decode(localStorage.getItem("accessToken"));
 
+      if (!decodedToken.exp) return;
+
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();
         config.headers["authorization"] = "Bearer " + data;
