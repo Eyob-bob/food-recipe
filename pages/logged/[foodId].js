@@ -56,7 +56,7 @@ const Food = () => {
       return refresh.accessToken;
     } catch (err) {
       console.log(err);
-      throw Error("Error Occured");
+      //   throw Error("Error Occured");
     }
   }
 
@@ -79,6 +79,8 @@ const Food = () => {
     if (router.query.foodId) {
       getOneRecipe(router.query.foodId);
     }
+
+    console.log(fav);
   }, [router.query]);
 
   return (
@@ -127,14 +129,52 @@ const Food = () => {
                 <div className="flex justify-center gap-4">
                   <div>
                     Add To Favorite
-                    <IconButton>
+                    <IconButton
+                      onClick={async () => {
+                        try {
+                          const favorite = (
+                            await interceptAxios.post(`/recipe/favorite`, fav, {
+                              headers: {
+                                authorization: `Bearer ${user.accessToken}`,
+                              },
+                            })
+                          ).data.fav;
+
+                          setFav(favorite);
+                          //   console.log(favorite);
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                    >
                       {"  "}
                       {fav.isFav ? <Favorite /> : <FavoriteOutlined />}
                     </IconButton>
                   </div>
                   <div>
                     Add To Bookmark
-                    <IconButton>
+                    <IconButton
+                      onClick={async () => {
+                        try {
+                          const bookmark = (
+                            await interceptAxios.post(
+                              `/recipe/bookmark`,
+                              book,
+                              {
+                                headers: {
+                                  authorization: `Bearer ${user.accessToken}`,
+                                },
+                              }
+                            )
+                          ).data.book;
+
+                          setBook(bookmark);
+                          //   console.log(favorite);
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                    >
                       {book.isBook ? <Bookmark /> : <BookmarkAddOutlined />}
                     </IconButton>
                   </div>
