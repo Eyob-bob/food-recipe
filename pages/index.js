@@ -12,24 +12,24 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 import useUser from "../custom-hooks/useUser";
 
-export default function Home() {
-  const [recipes, setRecipes] = useState([]);
-  const [ingridents, setIngridents] = useState([]);
-  const [steps, setSteps] = useState([]);
-  const [isFetching, setIsFetching] = useState(true);
-  const user = useUser();
+export default function Home(recipes) {
+  // const [recipes, setRecipes] = useState([]);
+  // const [ingridents, setIngridents] = useState([]);
+  // const [steps, setSteps] = useState([]);
+  // const [isFetching, setIsFetching] = useState(true);
+  // const user = useUser();
 
-  async function fetchAllRecipe() {
-    const allRecipe = (await instance.get("/recipe/getAll")).data;
-    setRecipes(allRecipe.allRecipe);
-    setSteps(allRecipe.allStep);
-    setIngridents(allRecipe.allIngrident);
-    setIsFetching(false);
-  }
+  // async function fetchAllRecipe() {
+  //   const allRecipe = (await instance.get("/recipe/getAll")).data;
+  //   setRecipes(allRecipe.allRecipe);
+  //   setSteps(allRecipe.allStep);
+  //   setIngridents(allRecipe.allIngrident);
+  //   setIsFetching(false);
+  // }
 
-  useEffect(() => {
-    fetchAllRecipe();
-  }, []);
+  // useEffect(() => {
+  //   fetchAllRecipe();
+  // }, []);
 
   return (
     <>
@@ -49,23 +49,17 @@ export default function Home() {
             <div className="flex flex-col justify-center items-center border">
               <h2 className="text-2xl font-extrabold my-10">All Dishes</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
-                {isFetching ? (
-                  <p>Loading...</p>
-                ) : (
-                  recipes.map((recipe) => {
-                    return (
-                      <Card
-                        key={recipe._id}
-                        name={recipe.name}
-                        time={recipe.timeInMin}
-                        calories={recipe.calories}
-                        person={recipe.numOfPersons}
-                        photo={recipe.photo}
-                        id={recipe._id}
-                      />
-                    );
-                  })
-                )}
+                {recipes.recipes.map((recipe) => (
+                  <Card
+                    key={recipe._id}
+                    name={recipe.name}
+                    time={recipe.timeInMin}
+                    calories={recipe.calories}
+                    person={recipe.numOfPersons}
+                    photo={recipe.photo}
+                    id={recipe._id}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -73,4 +67,11 @@ export default function Home() {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const allRecipe = (await instance.get("/recipe/getAll")).data;
+  return {
+    props: { recipes: allRecipe.allRecipe },
+  };
 }

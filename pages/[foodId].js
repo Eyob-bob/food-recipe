@@ -57,7 +57,6 @@ const Food = () => {
                     {ingrident.map((ing, index) => {
                       return <li key={index}>* {ing}</li>;
                     })}{" "}
-                    {console.log(ingrident)}
                   </ul>
                 </div>
                 <div className="w-[70vw] lg:w-[40vw] flex flex-col gap-2 justify-center items-center border">

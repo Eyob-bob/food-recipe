@@ -157,7 +157,6 @@ const createrecipes = () => {
         setSteps([]);
       }
     } catch (err) {
-      console.log(err);
       setOpen(true);
       setMessage(err.message);
     }

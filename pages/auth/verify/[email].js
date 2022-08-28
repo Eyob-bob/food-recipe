@@ -30,7 +30,6 @@ const verify = ({ accessToken, refreshToken }) => {
       <Button
         variant="outlined"
         onClick={async () => {
-          console.log(router.query.email);
           await instance.post("/auth/resend", { email: router.query.email });
         }}
       >

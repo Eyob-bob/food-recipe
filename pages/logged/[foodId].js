@@ -6,7 +6,15 @@ import Favorite from "@mui/icons-material/Favorite";
 import Bookmark from "@mui/icons-material/Bookmark";
 import BookmarkOutlined from "@mui/icons-material/BookmarkAddOutlined";
 import Navbar from "../../components/navbar";
-import { Avatar, Button, IconButton, TextField } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  Button,
+  IconButton,
+  Snackbar,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import interceptAxios from "../../lib/axiosUserConfig";
 import useUser from "../../custom-hooks/useUser";
@@ -15,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux-slices/userSlice";
 import instance from "../../lib/axiosConfig";
 import BookmarkAddOutlined from "@mui/icons-material/BookmarkAddOutlined";
+import useLoggedOut from "../../custom-hooks/useLoggedOut";
 
 const Food = () => {
   const router = useRouter();
@@ -24,8 +33,17 @@ const Food = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [fav, setFav] = useState({});
   const [book, setBook] = useState({});
+  const [comment, setComment] = useState("");
+  const [allComment, setAllComment] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const user = useUser();
   const dispatch = useDispatch();
+  const isLoading = useLoggedOut();
+
+  function handleClose() {
+    setOpen(false);
+  }
 
   async function getOneRecipe(id) {
     const data = (
@@ -41,6 +59,7 @@ const Food = () => {
     setIsFetching(false);
     setFav(data.fav);
     setBook(data.book);
+    setAllComment(data.comment);
   }
 
   async function refreshToken() {
@@ -80,11 +99,20 @@ const Food = () => {
       getOneRecipe(router.query.foodId);
     }
 
-    console.log(fav);
+    console.log(allComment);
   }, [router.query]);
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+            {message}
+          </Alert>
+        </Snackbar>
+      </Stack>
       <Head>
         <title>Detail Page</title>
       </Head>
@@ -141,7 +169,6 @@ const Food = () => {
                           ).data.fav;
 
                           setFav(favorite);
-                          //   console.log(favorite);
                         } catch (err) {
                           console.log(err);
                         }
@@ -169,7 +196,6 @@ const Food = () => {
                           ).data.book;
 
                           setBook(bookmark);
-                          //   console.log(favorite);
                         } catch (err) {
                           console.log(err);
                         }
@@ -181,18 +207,56 @@ const Food = () => {
                 </div>
 
                 <div className="flex gap-2 justify-center">
-                  <TextField variant="outlined" label="comment" />
-                  <Button variant="outlined">Post</Button>
+                  <TextField
+                    variant="outlined"
+                    label="comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                  <Button
+                    variant="outlined"
+                    onClick={async () => {
+                      if (comment == "") {
+                        setOpen(true);
+                        setMessage("Fill The open Comment input");
+                        return;
+                      }
+                      try {
+                        const allComments = (
+                          await interceptAxios.post(
+                            `/recipe/comment`,
+                            { id: router.query.foodId, comment },
+                            {
+                              headers: {
+                                authorization: `Bearer ${user.accessToken}`,
+                              },
+                            }
+                          )
+                        ).data.allComment;
+
+                        setAllComment(allComments);
+                        setComment("");
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                  >
+                    Post
+                  </Button>
                 </div>
                 <div className="flex flex-col gap-4">
                   <p>Comments</p>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-1">
-                      <Avatar>E</Avatar>
-                      <p className="text-gray-600">Eyob Abebe</p>
-                    </div>
-                    <p>That is Cool!</p>
-                  </div>
+                  {allComment.map((com) => {
+                    return (
+                      <div key={com._id} className="flex flex-col gap-2">
+                        <div className="flex items-center gap-1">
+                          <Avatar>{com.name[0]}</Avatar>
+                          <p className="text-gray-600">{com.name}</p>
+                        </div>
+                        <p>{com.comment}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
