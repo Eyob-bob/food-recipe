@@ -5,13 +5,14 @@ import instance from "../../../lib/axiosConfig";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-slices/userSlice";
 import { Button } from "@mui/material";
+import jwtDecode from "jwt-decode";
 
 const Verify = ({ accessToken, refreshToken }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
-    const accToken = jwt.decode(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    const accToken = jwtDecode(accessToken, process.env.ACCESS_TOKEN_SECRET);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 

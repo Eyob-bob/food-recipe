@@ -12,6 +12,7 @@ import Card from "../components/card";
 import { useDispatch } from "react-redux";
 import { login } from "../redux-slices/userSlice";
 import instance from "../lib/axiosConfig";
+import jwtDecode from "jwt-decode";
 
 export default function MyRecipes() {
   const isLoading = useLoggedOut();
@@ -38,7 +39,7 @@ export default function MyRecipes() {
   interceptAxios.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
-      const decodedToken = jwt.decode(user.accessToken);
+      const decodedToken = jwtDecode(user.accessToken);
 
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();

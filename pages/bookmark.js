@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { useDispatch } from "react-redux";
 import { login } from "../redux-slices/userSlice";
 import instance from "../lib/axiosConfig";
+import jwtDecode from "jwt-decode";
 
 export default function Bookmark() {
   const isLoading = useLoggedOut();
@@ -37,7 +38,7 @@ export default function Bookmark() {
   interceptAxios.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
-      const decodedToken = jwt.decode(user.accessToken);
+      const decodedToken = jwtDecode(user.accessToken);
 
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();
@@ -60,7 +61,7 @@ export default function Bookmark() {
           })
         ).data.recipes;
         setIsFetching(false);
-        if (bookmark[0] == null) return setBookmarks([]);
+        bookmark.pop();
         setBookmarks(bookmark);
       } catch (err) {
         console.log(err);
@@ -81,8 +82,9 @@ export default function Bookmark() {
           <div className="flex flex-col justify-center items-center border mt-14">
             <h2 className="text-2xl font-extrabold my-10">Bookmark Dishes</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
-              {isFetching ? <p>Loading...</p> : ""}
-              {bookmarks.length == 0 ? (
+              {isFetching ? (
+                <p>Loading...</p>
+              ) : bookmarks.length == 0 ? (
                 <p>No bookmarks Added</p>
               ) : (
                 bookmarks.map((fav) => {
@@ -99,6 +101,7 @@ export default function Bookmark() {
                   );
                 })
               )}
+
               {/* <Card />
               <Card />
               <Card />

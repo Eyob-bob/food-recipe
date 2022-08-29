@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux-slices/userSlice";
 import jwt from "jsonwebtoken";
 import interceptAxios from "../lib/axiosUserConfig";
+import jwtDecode from "jwt-decode";
 
 const Createrecipes = () => {
   const isLoading = useLoggedOut();
@@ -54,7 +55,7 @@ const Createrecipes = () => {
   interceptAxios.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
-      const decodedToken = jwt.decode(user.accessToken);
+      const decodedToken = jwtDecode(user.accessToken);
 
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();
@@ -130,7 +131,8 @@ const Createrecipes = () => {
       data = (
         await interceptAxios.post("/recipe/add", formData, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem("refreshToken")}`,
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "content-type": "multipart/form-data",
           },
         })
       ).data;
@@ -155,6 +157,7 @@ const Createrecipes = () => {
         setSteps([]);
       }
     } catch (err) {
+      console.log(err);
       setOpen(true);
       setMessage(err.message);
     }

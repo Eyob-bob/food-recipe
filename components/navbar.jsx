@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import CloseIcon from "@mui/icons-material/Close";
 import useIsOpen from "../custom-hooks/useIsOpen";
 import { closed, opened } from "../redux-slices/isOpenSlice";
+import jwtDecode from "jwt-decode";
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);

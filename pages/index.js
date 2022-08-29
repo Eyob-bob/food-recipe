@@ -11,25 +11,60 @@ import { login } from "../redux-slices/userSlice";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import useUser from "../custom-hooks/useUser";
+import interceptAxios from "../lib/axiosUserConfig";
+import jwtDecode from "jwt-decode";
 
-export default function Home(recipes) {
-  // const [recipes, setRecipes] = useState([]);
-  // const [ingridents, setIngridents] = useState([]);
-  // const [steps, setSteps] = useState([]);
-  // const [isFetching, setIsFetching] = useState(true);
-  // const user = useUser();
+export default function Home() {
+  const [recipes, setRecipes] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const user = useUser();
+  // const dispatch = useDispatch();
 
-  // async function fetchAllRecipe() {
-  //   const allRecipe = (await instance.get("/recipe/getAll")).data;
-  //   setRecipes(allRecipe.allRecipe);
-  //   setSteps(allRecipe.allStep);
-  //   setIngridents(allRecipe.allIngrident);
-  //   setIsFetching(false);
+  async function fetchAllRecipe() {
+    const allRecipe = (await interceptAxios.get("/recipe/getAll")).data;
+    setRecipes(allRecipe.allRecipe);
+    setIsFetching(false);
+  }
+
+  // async function refreshToken() {
+  //   try {
+  //     const refresh = (
+  //       await instance.post("auth/refresh", {
+  //         refreshToken: user.refreshToken,
+  //       })
+  //     ).data;
+  //     localStorage.setItem("accessToken", refresh.accessToken);
+  //     dispatch(login());
+
+  //     return refresh.accessToken;
+  //   } catch (err) {
+  //     console.log(err);
+  //     //   throw Error("Error Occured");
+  //   }
   // }
 
-  // useEffect(() => {
-  //   fetchAllRecipe();
-  // }, []);
+  // interceptAxios.interceptors.request.use(
+  //   async (config) => {
+  //     const currentDate = new Date();
+  //     console.log("Hi");
+  //     if (user.refreshToken) {
+  //       const decodedToken = jwtDecode(localStorage.getItem("accessToken"));
+
+  //       if (!decodedToken.exp) return;
+
+  //       if (decodedToken.exp * 1000 < currentDate.getTime()) {
+  //         const data = await refreshToken();
+  //         config.headers["authorization"] = "Bearer " + data;
+  //       }
+  //       return config;
+  //     }
+  //   },
+  //   (err) => Promise.reject(err)
+  // );
+
+  useEffect(() => {
+    fetchAllRecipe();
+  }, []);
 
   return (
     <>
@@ -49,7 +84,10 @@ export default function Home(recipes) {
             <div className="flex flex-col justify-center items-center border">
               <h2 className="text-2xl font-extrabold my-10">All Dishes</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
-                {recipes.recipes.map((recipe) => (
+                {/* {isFetching ? (
+                  <p>Loading...</p>
+                ) : ( */}
+                {recipes.map((recipe) => (
                   <Card
                     key={recipe._id}
                     name={recipe.name}
@@ -60,6 +98,7 @@ export default function Home(recipes) {
                     id={recipe._id}
                   />
                 ))}
+                {/* )} */}
               </div>
             </div>
           </div>
@@ -67,11 +106,4 @@ export default function Home(recipes) {
       </div>
     </>
   );
-}
-
-export async function getServerSideProps() {
-  const allRecipe = (await instance.get("/recipe/getAll")).data;
-  return {
-    props: { recipes: allRecipe.allRecipe },
-  };
 }

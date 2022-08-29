@@ -23,6 +23,7 @@ import { login } from "../../redux-slices/userSlice";
 import instance from "../../lib/axiosConfig";
 import BookmarkAddOutlined from "@mui/icons-material/BookmarkAddOutlined";
 import useLoggedOut from "../../custom-hooks/useLoggedOut";
+import jwtDecode from "jwt-decode";
 
 const Food = () => {
   const router = useRouter();
@@ -81,9 +82,7 @@ const Food = () => {
   interceptAxios.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
-      const decodedToken = jwt.decode(localStorage.getItem("accessToken"));
-
-      if (!decodedToken.exp) return;
+      const decodedToken = jwtDecode(localStorage.getItem("accessToken"));
 
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();

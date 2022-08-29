@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { useDispatch } from "react-redux";
 import { login } from "../redux-slices/userSlice";
 import instance from "../lib/axiosConfig";
+import jwtDecode from "jwt-decode";
 
 export default function Favorite() {
   const isLoading = useLoggedOut();
@@ -37,8 +38,7 @@ export default function Favorite() {
   interceptAxios.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
-      const decodedToken = jwt.decode(user.accessToken);
-
+      const decodedToken = jwtDecode(localStorage.getItem("accessToken"));
       if (decodedToken.exp * 1000 < currentDate.getTime()) {
         const data = await refreshToken();
         config.headers["authorization"] = "Bearer " + data;
@@ -60,7 +60,7 @@ export default function Favorite() {
           })
         ).data.recipes;
         setIsFetching(false);
-        if (favorite[0] == null) return setFavorites([]);
+        favorite.pop();
         setFavorites(favorite);
       } catch (err) {
         console.log(err);
