@@ -3,7 +3,13 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Navbar from "../components/navbar";
 import { useEffect, useRef, useState } from "react";
-import { Alert, IconButton, Snackbar, Stack } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  IconButton,
+  Snackbar,
+  Stack,
+} from "@mui/material";
 import Trash from "@mui/icons-material/Delete";
 import instance from "../lib/axiosConfig";
 import useLoggedOut from "../custom-hooks/useLoggedOut";
@@ -76,7 +82,6 @@ const Createrecipes = () => {
   }
 
   async function handleSubmit(e) {
-    setIsSaving(true);
     e.preventDefault();
     if (!fields.name) {
       setOpen(true);
@@ -118,6 +123,8 @@ const Createrecipes = () => {
       setMessage("Photo is required");
       return;
     }
+
+    setIsSaving(true);
 
     const formData = new FormData();
     formData.append("name", fields.name);
@@ -365,14 +372,14 @@ const Createrecipes = () => {
                 </div>
               </div>
             </div>
-
             <Button
               type="submit"
               variant="contained"
               className="text-white bg-blue-600 capitalize w-[30%] "
             >
-              Create
+              {"Create"}
             </Button>
+            {isSaving && <CircularProgress />}
           </form>
         </div>
       </div>
