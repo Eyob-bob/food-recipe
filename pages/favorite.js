@@ -60,7 +60,6 @@ export default function Favorite() {
           })
         ).data.recipes;
         setIsFetching(false);
-        favorite.pop();
         setFavorites(favorite);
       } catch (err) {
         console.log(err);

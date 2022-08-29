@@ -61,7 +61,6 @@ export default function Bookmark() {
           })
         ).data.recipes;
         setIsFetching(false);
-        bookmark.pop();
         setBookmarks(bookmark);
       } catch (err) {
         console.log(err);
