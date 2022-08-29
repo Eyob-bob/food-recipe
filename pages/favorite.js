@@ -60,7 +60,7 @@ export default function Favorite() {
           })
         ).data.recipes;
         setIsFetching(false);
-        setFavorites(favorite);
+        setFavorites(favorite.filter((fav) => fav));
       } catch (err) {
         console.log(err);
       }
@@ -80,8 +80,9 @@ export default function Favorite() {
           <div className="flex flex-col justify-center items-center border mt-14">
             <h2 className="text-2xl font-extrabold my-10">Favorite Dishes</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
-              {isFetching ? <p>Loading...</p> : ""}
-              {favorites.length == 0 ? (
+              {isFetching ? (
+                <p>Loading...</p>
+              ) : favorites.length == 0 ? (
                 <p>No Favorites Added</p>
               ) : (
                 favorites.map((fav) => {
@@ -98,12 +99,6 @@ export default function Favorite() {
                   );
                 })
               )}
-              {/* <Card />
-              <Card />
-              <Card />
-              <Card />
-              <Card />
-              <Card /> */}
             </div>
           </div>
         </div>

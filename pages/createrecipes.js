@@ -16,6 +16,7 @@ import jwtDecode from "jwt-decode";
 
 const Createrecipes = () => {
   const isLoading = useLoggedOut();
+  const [isSaving, setIsSaving] = useState(false);
   const user = useUser();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -75,6 +76,7 @@ const Createrecipes = () => {
   }
 
   async function handleSubmit(e) {
+    setIsSaving(true);
     e.preventDefault();
     if (!fields.name) {
       setOpen(true);
@@ -137,6 +139,8 @@ const Createrecipes = () => {
         })
       ).data;
 
+      setIsSaving(false);
+
       if (data) {
         setSuccessOpen(true);
         setSuccessMessage("Recipe Created Successfully");
@@ -157,7 +161,7 @@ const Createrecipes = () => {
         setSteps([]);
       }
     } catch (err) {
-      console.log(err);
+      setIsSaving(false);
       setOpen(true);
       setMessage(err.message);
     }
